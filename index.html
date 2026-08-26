@@ -386,7 +386,7 @@ function montarOrcamento(){
     if (p === 1) {
       linhas.push(`${label}  R$ ${formatBRL(total).replace('R$','').trim()}`);
     } else {
-      linhas.push(`${label} de R$ ${formatBRL(valorParcela).replace('R$','').trim()}  (total R$ ${formatBRL(total).replace('R$','').trim()})`);
+      linhas.push(`${label} de R$ ${formatBRL(valorParcela).replace('R$','').trim()}`);
     }
   });
 
