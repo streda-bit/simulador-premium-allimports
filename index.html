@@ -366,17 +366,10 @@ function montarOrcamento(){
   const valor = Number(valorInput.value) || 0;
   const data = RATES[bandeiraKey];
   const credito = data.credit || {};
-  const debito = data.debit || {};
 
-  const parcelas = Object.keys(credito).map(Number).sort((a,b)=>a-b);
+  const parcelas = Object.keys(credito).map(Number).sort((a,b)=>a-b).filter(p => p >= 2);
 
   let linhas = [];
-
-  // 1x: usa débito se existir (normalmente mais barato), senão crédito à vista
-  if (Object.keys(debito).length) {
-    const totalDebito = repassar ? (valor / (1 - debito[1]/100)) : valor;
-    linhas.push(`À vista (Débito)  R$ ${formatBRL(totalDebito).replace('R$','').trim()}`);
-  }
 
   parcelas.forEach(p => {
     const taxa = credito[p];
@@ -384,12 +377,7 @@ function montarOrcamento(){
     // Sem repasse: lojista absorve a taxa, cliente paga o valor do produto dividido em partes iguais.
     const total = repassar ? (valor / (1 - taxa/100)) : valor;
     const valorParcela = total / p;
-    const label = p === 1 ? '1x (à vista)' : `${p}x`;
-    if (p === 1) {
-      linhas.push(`${label}  R$ ${formatBRL(total).replace('R$','').trim()}`);
-    } else {
-      linhas.push(`${label} de R$ ${formatBRL(valorParcela).replace('R$','').trim()}`);
-    }
+    linhas.push(`${p}x de R$ ${formatBRL(valorParcela).replace('R$','').trim()}`);
   });
 
   const texto =
