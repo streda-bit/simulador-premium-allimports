@@ -381,8 +381,13 @@ function montarOrcamento(){
   parcelas.forEach(p => {
     const taxa = credito[p];
     const total = valor / (1 - taxa/100);
+    const valorParcela = total / p;
     const label = p === 1 ? '1x (à vista)' : `${p}x`;
-    linhas.push(`${label}  R$ ${formatBRL(total).replace('R$','').trim()}`);
+    if (p === 1) {
+      linhas.push(`${label}  R$ ${formatBRL(total).replace('R$','').trim()}`);
+    } else {
+      linhas.push(`${label} de R$ ${formatBRL(valorParcela).replace('R$','').trim()}  (total R$ ${formatBRL(total).replace('R$','').trim()})`);
+    }
   });
 
   const texto =
