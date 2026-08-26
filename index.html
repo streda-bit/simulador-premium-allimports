@@ -374,13 +374,15 @@ function montarOrcamento(){
 
   // 1x: usa débito se existir (normalmente mais barato), senão crédito à vista
   if (Object.keys(debito).length) {
-    const totalDebito = valor / (1 - debito[1]/100);
+    const totalDebito = repassar ? (valor / (1 - debito[1]/100)) : valor;
     linhas.push(`À vista (Débito)  R$ ${formatBRL(totalDebito).replace('R$','').trim()}`);
   }
 
   parcelas.forEach(p => {
     const taxa = credito[p];
-    const total = valor / (1 - taxa/100);
+    // Com repasse: cliente paga o valor cheio + juros embutidos.
+    // Sem repasse: lojista absorve a taxa, cliente paga o valor do produto dividido em partes iguais.
+    const total = repassar ? (valor / (1 - taxa/100)) : valor;
     const valorParcela = total / p;
     const label = p === 1 ? '1x (à vista)' : `${p}x`;
     if (p === 1) {
